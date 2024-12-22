@@ -6,10 +6,10 @@ import java.io.File
 import kotlin.math.abs
 import kotlin.test.assertEquals
 
-data class Point(val x: Int, val y: Int) {
+private data class Point(val x: Int, val y: Int) {
     operator fun plus(other: Point) = Point(x + other.x, y + other.y)
 }
-enum class Direction(val delta: Point) {
+private enum class Direction(val delta: Point) {
     NORTH(Point(0, -1)),
     EAST(Point(1, 0)),
     SOUTH(Point(0, 1)),
@@ -22,7 +22,7 @@ enum class Direction(val delta: Point) {
     fun turnRight() = directionFor(entries.indexOf(this) + 1)
 }
 
-fun followDirections(directions: String) = sequence {
+private fun followDirections(directions: String) = sequence {
     var currentDirection = NORTH
     var current = Point(0, 0)
 
@@ -40,11 +40,11 @@ fun followDirections(directions: String) = sequence {
     }
 }
 
-fun distanceOf(p: Point) = abs(p.x) + abs(p.y)
+private fun distanceOf(p: Point) = abs(p.x) + abs(p.y)
 
-fun solvePartOne(directions: String) = distanceOf(followDirections(directions).last())
+private fun solvePartOne(directions: String) = distanceOf(followDirections(directions).last())
 
-fun Sequence<Point>.firstDuplicate(): Point {
+private fun Sequence<Point>.firstDuplicate(): Point {
     val visited = mutableSetOf<Point>()
     for (p in this) {
         if (visited.contains(p)) {
@@ -55,7 +55,7 @@ fun Sequence<Point>.firstDuplicate(): Point {
     error("no duplicates found")
 }
 
-fun solvePartTwo(directions: String) = distanceOf(followDirections(directions).firstDuplicate())
+private fun solvePartTwo(directions: String) = distanceOf(followDirections(directions).firstDuplicate())
 
 class Day01 {
     @Test
