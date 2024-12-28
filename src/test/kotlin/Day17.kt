@@ -6,6 +6,7 @@ import java.security.MessageDigest
 import kotlin.test.assertEquals
 
 private typealias HashFunction = (String) -> String
+private typealias Position = Pair<Int, Int>
 @OptIn(ExperimentalStdlibApi::class)
 private fun hashFunctionFor(seed: String): HashFunction {
     val seedArray = seed.toByteArray()
@@ -14,17 +15,19 @@ private fun hashFunctionFor(seed: String): HashFunction {
 }
 
 private enum class Directions(val dx: Int, val dy: Int) {
-    UP(0,-1), DOWN(0,1), LEFT(-1,0), RIGHT(1, 0)
+    U(0, -1), D(0, 1), L(-1, 0), R(1, 0);
+
+    operator fun plus(position: Position) = Pair(position.first + dx, position.second + dy)
 }
 
-private data class State(val path: String, val position: Pair<Int, Int>, private val hashFunction: HashFunction) {
+private data class State(val path: String, val position: Position, private val hashFunction: HashFunction) {
     private val hash = hashFunction(path)
     private val doors = BooleanArray(4) { hash[it] in 'b'..'f' }
 
     fun getNextStates(): List<State> {
         return Directions.entries.toTypedArray()
             .filterIndexed { i, _ -> doors[i] }
-            .map { State(path+it.name[0], Pair(position.first+it.dx, position.second+it.dy), hashFunction) }
+            .map { State(path + it.name, it + position, hashFunction) }
             .filter { (_, it) -> it.first in 0..3 && it.second in 0..3 }
     }
 }
