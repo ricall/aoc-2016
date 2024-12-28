@@ -8,9 +8,10 @@ private fun generateTraps(input: String) = sequence {
     var current = input
     while (true) {
         yield(current)
-        val temp = "." + current + "."
-        current = (0..current.length - 1).map { i ->
-            when (temp.substring(i, i + 3)) {
+
+        val safe = ".$current."
+        current = current.indices.map { i ->
+            when (safe.substring(i, i + 3)) {
                 "^^." -> "^"
                 ".^^" -> "^"
                 "^.." -> "^"
